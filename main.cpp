@@ -2,8 +2,17 @@
 // "OpenGL SuperBible", 2nd Edition, de Richard S. e Wright Jr.
 
 #include "desenhos.h"
+#include "classeDesenho.h"
 
 GLfloat angle, fAspect;
+
+void UpdateFrame(Desenho *d){
+
+	d->movimenta();
+	d->desenha();
+	d->resetMovimento();
+
+}
 
 void DesenhaEixos(void)
 {
@@ -34,7 +43,15 @@ void Desenha(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	desenhaNave();
+	Desenho *nave, *alien;
+
+	nave = new Nave();
+	alien = new Alien();
+
+	UpdateFrame(nave);
+	UpdateFrame(alien);
+
+	// desenhaNave();
 	// desenhaAlien();
 	// desenhaMissil();
 	
