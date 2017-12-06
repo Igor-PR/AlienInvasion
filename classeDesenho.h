@@ -25,7 +25,7 @@ public:
 	}
 	~Nave();
 	void movimenta(){
-		this->posY + this->movimento;
+		this->posX = this->posX + this->movimento;
 	}
 	void desenha(){
 		glPushMatrix();
@@ -76,7 +76,7 @@ public:
 	}
 	~Alien();
 	void movimenta(){
-		this->posY + this->movimento;
+		this->posX = this->posX + this->movimento;
 	}
 	void desenha(){
 		glPushMatrix();

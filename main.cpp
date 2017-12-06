@@ -1,10 +1,20 @@
 // Este código está baseado nos exemplos disponíveis no livro
 // "OpenGL SuperBible", 2nd Edition, de Richard S. e Wright Jr.
 
+
+
 #include "desenhos.h"
 #include "classeDesenho.h"
 
 GLfloat angle, fAspect;
+
+Desenho *nave = new Nave();
+Desenho *alien =  new Alien();
+
+void ReDesenha(int data){
+	glutTimerFunc(30, ReDesenha, -1);
+	glutPostRedisplay();
+}
 
 void UpdateFrame(Desenho *d){
 
@@ -43,11 +53,6 @@ void Desenha(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	Desenho *nave, *alien;
-
-	nave = new Nave();
-	alien = new Alien();
-
 	UpdateFrame(nave);
 	UpdateFrame(alien);
 
@@ -57,6 +62,7 @@ void Desenha(void)
 	
 
 	glutSwapBuffers();
+	// glutPostRedisplay();
 }
 
 // Inicializa parâmetros de rendering
@@ -153,6 +159,9 @@ int main(int argc, char** argv)
 	glutInitWindowSize(640,480);
 	glutCreateWindow("Alien Invasion");
 	glutDisplayFunc(Desenha);
+	// glutTimerFunc(30, ReDesenha, -1); //glutIdle()
+	glutIdleFunc(Desenha);
+
     glutReshapeFunc(AlteraTamanhoJanela);
 	glutMouseFunc(GerenciaMouse);
 	Inicializa();
