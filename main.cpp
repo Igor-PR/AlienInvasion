@@ -1,19 +1,36 @@
 // Este código está baseado nos exemplos disponíveis no livro
 // "OpenGL SuperBible", 2nd Edition, de Richard S. e Wright Jr.
 
-
-
-#include "desenhos.h"
+// #include <stdlib.h>
+// #include <iostream>
+#include <GL/glut.h>
 #include "classeDesenho.h"
+#include "funcoes.h"
 
 GLfloat angle, fAspect;
 
-Desenho *nave = new Nave();
+Nave *nave = new Nave();
 Desenho *alien =  new Alien();
+// void ReDesenha(int data){
+// 	glutTimerFunc(30, ReDesenha, -1);
+// 	glutPostRedisplay();
+// }
 
-void ReDesenha(int data){
-	glutTimerFunc(30, ReDesenha, -1);
-	glutPostRedisplay();
+
+void Controles(unsigned char tecla, int mouseX, int mouseY){
+
+	switch(tecla){
+		case(' '):
+			// nave.atiraMissil();
+			break;
+		case('a'):
+			nave->setMovimento(-1.0f);
+			break;
+		case('d'):
+			nave->setMovimento(1.0f);
+			break;
+	}
+
 }
 
 void UpdateFrame(Desenho *d){
@@ -55,10 +72,6 @@ void Desenha(void)
 
 	UpdateFrame(nave);
 	UpdateFrame(alien);
-
-	// desenhaNave();
-	// desenhaAlien();
-	// desenhaMissil();
 	
 
 	glutSwapBuffers();
@@ -137,19 +150,19 @@ void AlteraTamanhoJanela(GLsizei w, GLsizei h)
 }
 
 // Função callback chamada para gerenciar eventos do mouse
-void GerenciaMouse(int button, int state, int x, int y)
-{
-	if (button == GLUT_LEFT_BUTTON)
-		if (state == GLUT_DOWN) {  // Zoom-in
-			if (angle >= 10) angle -= 5;
-		}
-	if (button == GLUT_RIGHT_BUTTON)
-		if (state == GLUT_DOWN) {  // Zoom-out
-			if (angle <= 130) angle += 5;
-		}
-	EspecificaParametrosVisualizacao();
-	glutPostRedisplay();
-}
+// void GerenciaMouse(int button, int state, int x, int y)
+// {
+// 	if (button == GLUT_LEFT_BUTTON)
+// 		if (state == GLUT_DOWN) {  // Zoom-in
+// 			if (angle >= 10) angle -= 5;
+// 		}
+// 	if (button == GLUT_RIGHT_BUTTON)
+// 		if (state == GLUT_DOWN) {  // Zoom-out
+// 			if (angle <= 130) angle += 5;
+// 		}
+// 	EspecificaParametrosVisualizacao();
+// 	glutPostRedisplay();
+// }
 
 // Programa Principal
 int main(int argc, char** argv)
@@ -162,8 +175,10 @@ int main(int argc, char** argv)
 	// glutTimerFunc(30, ReDesenha, -1); //glutIdle()
 	glutIdleFunc(Desenha);
 
+	glutKeyboardFunc(Controles);
     glutReshapeFunc(AlteraTamanhoJanela);
-	glutMouseFunc(GerenciaMouse);
+	// glutMouseFunc(GerenciaMouse);
+
 	Inicializa();
 	glutMainLoop();
 }

@@ -1,6 +1,11 @@
 #ifndef Class_Desenho
 #define Class_Desenho
 
+
+#include "funcoes.h"
+
+int Xmax = 100, Xmin = -100, Ymax = 80, Ymin = -100;
+
 class Desenho {
 protected:
 	float posX;
@@ -18,7 +23,7 @@ class Nave : public Desenho
 public:
 	Nave(){
 		this->posX = 0.0f;
-		this->posY = 0.0f;
+		this->posY = Ymin + 10;
 
 		//Teste
 		this->movimento = -1.0f;
@@ -60,7 +65,11 @@ public:
 		}
 	void resetMovimento(){
 		//Teste
-		this->movimento = -1.0f;
+		this->movimento = 0.0f;
+	}
+
+	void setMovimento(float movimento){
+		this->movimento = movimento;
 	}
 };
 
@@ -69,7 +78,7 @@ class Alien : public Desenho
 public:
 	Alien(){
 		this->posX = 0.0f;
-		this->posY = 20.0f;
+		this->posY = Ymax - 10;
 
 		//Teste
 		this->movimento = 1.0f;
@@ -89,6 +98,32 @@ public:
 			glPopMatrix();	
 			
 			desenhaEsfera(5.0f,20,20,0.196f, 0.804f, 0.196f);
+
+		glPopMatrix();	
+	}
+	void resetMovimento(){
+		//Teste
+		this->movimento = 0.0f;
+	}
+};
+
+
+class Missil : public Desenho{
+	Missil(float X, float Y){
+		this->posX = X;
+		this->posY = Y;
+
+		//Teste
+		this->movimento = 1.0f;
+	}
+	void movimenta(){
+		this->posY = this->posY + this->movimento;
+	}
+	void desenha(){
+		glPushMatrix();
+			glTranslatef(this->posX,this->posY,0.0f);
+
+			desenhaEsfera(3.0f,20,20,1.0f,0.0f,0.0f);
 
 		glPopMatrix();	
 	}
