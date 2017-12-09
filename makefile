@@ -7,7 +7,7 @@ funcoes.o:	funcoes.cpp  classeDesenho.h
 	g++ -o funcoes.o -c funcoes.cpp -lGLU -lGL -lglut 
 
 main.o: main.cpp classeDesenho.h funcoes.h
-	g++ -o main.o -c main.cpp
+	g++ -o main.o -c main.cpp -std=c++11
 
 clean:
 	rm -rf *.o

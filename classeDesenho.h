@@ -10,16 +10,51 @@ class Desenho {
 protected:
 	float posX;
 	float posY;
-	float movimento;	
+	float movimento;
+	Desenho *missil = NULL;
 public:
  	virtual void movimenta() = 0; 
  	virtual void desenha() = 0;
  	// virtual void testaColisao();
  	virtual void resetMovimento() = 0;
+ 	Desenho* getMissil(){
+ 		return missil;
+ 	}
+};
+
+class Missil : public Desenho{
+private:
+	Desenho *pai = NULL;
+public:	
+	Missil(float X, float Y, Desenho *pai){
+		this->posX = X;
+		this->posY = Y;
+
+		//Teste
+		this->movimento = 1.0f;
+		this->pai = pai;
+	}
+	void movimenta(){
+		this->posY = this->posY + this->movimento;
+	}
+	void desenha(){
+		glPushMatrix();
+			glTranslatef(this->posX,this->posY,0.0f);
+
+			desenhaEsfera(3.0f,20,20,1.0f,0.0f,0.0f);
+
+		glPopMatrix();	
+	}
+	void resetMovimento(){
+		//Teste
+		this->movimento = 1.0f;
+	}
 };
 
 class Nave : public Desenho
 {
+private:
+	bool podeAtirar = true;
 public:
 	Nave(){
 		this->posX = 0.0f;
@@ -71,6 +106,20 @@ public:
 	void setMovimento(float movimento){
 		this->movimento = movimento;
 	}
+
+	// Desenho getMissil(){
+	// 	return this->missil;
+	// }
+
+	void atiraMissil(){
+
+		if (this->podeAtirar)
+		{
+			this->missil = new Missil(this->posX,this->posY + 2,this);
+			this->podeAtirar = false;
+		}
+
+	}
 };
 
 class Alien : public Desenho
@@ -108,29 +157,6 @@ public:
 };
 
 
-class Missil : public Desenho{
-	Missil(float X, float Y){
-		this->posX = X;
-		this->posY = Y;
 
-		//Teste
-		this->movimento = 1.0f;
-	}
-	void movimenta(){
-		this->posY = this->posY + this->movimento;
-	}
-	void desenha(){
-		glPushMatrix();
-			glTranslatef(this->posX,this->posY,0.0f);
-
-			desenhaEsfera(3.0f,20,20,1.0f,0.0f,0.0f);
-
-		glPopMatrix();	
-	}
-	void resetMovimento(){
-		//Teste
-		this->movimento = 1.0f;
-	}
-};
 
 #endif

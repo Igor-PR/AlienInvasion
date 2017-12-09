@@ -11,17 +11,13 @@ GLfloat angle, fAspect;
 
 Nave *nave = new Nave();
 Desenho *alien =  new Alien();
-// void ReDesenha(int data){
-// 	glutTimerFunc(30, ReDesenha, -1);
-// 	glutPostRedisplay();
-// }
 
 
 void Controles(unsigned char tecla, int mouseX, int mouseY){
 
 	switch(tecla){
 		case(' '):
-			// nave.atiraMissil();
+			nave->atiraMissil();
 			break;
 		case('a'):
 			nave->setMovimento(-1.0f);
@@ -38,23 +34,14 @@ void UpdateFrame(Desenho *d){
 	d->movimenta();
 	d->desenha();
 	d->resetMovimento();
+	if (d->getMissil() != NULL)
+	{
+		UpdateFrame(d->getMissil());
+	}
 
 }
 
-void DesenhaEixos(void)
-{
-	glBegin(GL_LINES);
-		glColor3f(1.0f,0.0f,0.0f);
-		glVertex3f(0.0f,0.0f,0.0f);
-		glVertex3f(20.0f,0.0f,0.0f);
-		glColor3f(0.0f,1.0f,0.0f);
-		glVertex3f(0.0f,0.0f,0.0f);
-		glVertex3f(0.0f,20.0f,0.0f);
-		glColor3f(0.0f,0.0f,1.0f);
-		glVertex3f(0.0f,0.0f,0.0f);
-		glVertex3f(0.0f,0.0f,20.0f);
-	glEnd();
-}
+
 
 // Função callback chamada para fazer o desenho
 void Desenha(void)
@@ -149,20 +136,7 @@ void AlteraTamanhoJanela(GLsizei w, GLsizei h)
 	EspecificaParametrosVisualizacao();
 }
 
-// Função callback chamada para gerenciar eventos do mouse
-// void GerenciaMouse(int button, int state, int x, int y)
-// {
-// 	if (button == GLUT_LEFT_BUTTON)
-// 		if (state == GLUT_DOWN) {  // Zoom-in
-// 			if (angle >= 10) angle -= 5;
-// 		}
-// 	if (button == GLUT_RIGHT_BUTTON)
-// 		if (state == GLUT_DOWN) {  // Zoom-out
-// 			if (angle <= 130) angle += 5;
-// 		}
-// 	EspecificaParametrosVisualizacao();
-// 	glutPostRedisplay();
-// }
+
 
 // Programa Principal
 int main(int argc, char** argv)
@@ -172,12 +146,11 @@ int main(int argc, char** argv)
 	glutInitWindowSize(640,480);
 	glutCreateWindow("Alien Invasion");
 	glutDisplayFunc(Desenha);
-	// glutTimerFunc(30, ReDesenha, -1); //glutIdle()
 	glutIdleFunc(Desenha);
 
 	glutKeyboardFunc(Controles);
     glutReshapeFunc(AlteraTamanhoJanela);
-	// glutMouseFunc(GerenciaMouse);
+
 
 	Inicializa();
 	glutMainLoop();
