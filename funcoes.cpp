@@ -20,3 +20,23 @@ void DesenhaEixos(void)
 		glVertex3f(0.0f,0.0f,20.0f);
 	glEnd();
 }
+
+bool movimentoEPoissvel(char plano,float posAtual, float movimento){
+
+	float deslocamento = posAtual + movimento;
+
+	if (plano == 'Y')
+	{
+		if ((deslocamento <= Ymax) && (deslocamento >= Ymin))
+			return true;
+		else
+			return false;
+	}
+	else{
+		if ((deslocamento <= Xmax) && (deslocamento >= Xmin))
+			return true;
+		else
+			return false;
+	}
+
+}

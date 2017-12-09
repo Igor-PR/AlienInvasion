@@ -1,10 +1,10 @@
 #ifndef Class_Desenho
 #define Class_Desenho
 
-
+// #include <stdio.h>
+// #include <iostream>
 #include "funcoes.h"
 
-int Xmax = 100, Xmin = -100, Ymax = 80, Ymin = -100;
 
 class Desenho {
 protected:
@@ -12,13 +12,24 @@ protected:
 	float posY;
 	float movimento;
 	Desenho *missil = NULL;
+	bool podeAtirar = true;
 public:
  	virtual void movimenta() = 0; 
  	virtual void desenha() = 0;
  	// virtual void testaColisao();
  	virtual void resetMovimento() = 0;
+
  	Desenho* getMissil(){
  		return missil;
+ 	}
+
+ 	void deletaMissil(){
+ 		// delete this->missil;
+ 		this->missil = NULL;
+ 	}
+
+ 	void resetAtirar(){
+ 		this->podeAtirar = true;
  	}
 };
 
@@ -35,7 +46,13 @@ public:
 		this->pai = pai;
 	}
 	void movimenta(){
-		this->posY = this->posY + this->movimento;
+		if (movimentoEPoissvel('Y',this->posY,this->movimento))
+			this->posY = this->posY + this->movimento;
+		else{
+			this->pai->resetAtirar();
+			this->pai->deletaMissil();
+		}
+
 	}
 	void desenha(){
 		glPushMatrix();
@@ -53,8 +70,6 @@ public:
 
 class Nave : public Desenho
 {
-private:
-	bool podeAtirar = true;
 public:
 	Nave(){
 		this->posX = 0.0f;
@@ -65,7 +80,8 @@ public:
 	}
 	~Nave();
 	void movimenta(){
-		this->posX = this->posX + this->movimento;
+		if (movimentoEPoissvel('X',this->posX,this->movimento))
+			this->posX = this->posX + this->movimento;
 	}
 	void desenha(){
 		glPushMatrix();
@@ -107,10 +123,6 @@ public:
 		this->movimento = movimento;
 	}
 
-	// Desenho getMissil(){
-	// 	return this->missil;
-	// }
-
 	void atiraMissil(){
 
 		if (this->podeAtirar)
@@ -134,7 +146,8 @@ public:
 	}
 	~Alien();
 	void movimenta(){
-		this->posX = this->posX + this->movimento;
+		if (movimentoEPoissvel('X',this->posX,this->movimento))
+			this->posX = this->posX + this->movimento;
 	}
 	void desenha(){
 		glPushMatrix();
