@@ -1,8 +1,11 @@
 #ifndef Class_Desenho
 #define Class_Desenho
 
-// #include <stdio.h>
-// #include <iostream>
+#include <stdio.h>
+#include <iostream>
+
+#include <cstdlib>
+
 #include "funcoes.h"
 
 
@@ -34,7 +37,7 @@ public:
 };
 
 class Missil : public Desenho{
-private:
+protected:
 	Desenho *pai = NULL;
 public:	
 	Missil(float X, float Y, Desenho *pai){
@@ -65,6 +68,33 @@ public:
 	void resetMovimento(){
 		//Teste
 		this->movimento = 1.0f;
+	}
+};
+
+class MissilJogador : public Missil{
+public:
+	MissilJogador(float X, float Y, Desenho *pai):Missil(X,Y,pai)
+	{}
+};
+
+class MissilAlien : public Missil{
+public:
+	MissilAlien(float X, float Y, Desenho *pai):Missil(X,Y,pai){
+		// this->posX = X;
+		// this->posY = Y;
+		this->movimento = -1.0f;
+		// this->pai = pai;
+	}
+	void desenha(){
+		glPushMatrix();
+			glTranslatef(this->posX,this->posY,0.0f);
+
+			desenhaEsfera(3.0f,20,20,0.0f,1.0f,0.0f);
+
+		glPopMatrix();	
+	}
+	void resetMovimento(){
+		this->movimento = -1.0f;
 	}
 };
 
@@ -127,7 +157,7 @@ public:
 
 		if (this->podeAtirar)
 		{
-			this->missil = new Missil(this->posX,this->posY + 2,this);
+			this->missil = new MissilJogador(this->posX,this->posY + 2,this);
 			this->podeAtirar = false;
 		}
 
@@ -136,18 +166,24 @@ public:
 
 class Alien : public Desenho
 {
+private:
+	int countAtiraMissil;
 public:
-	Alien(){
-		this->posX = 0.0f;
+	Alien(int offset){
+		this->posX = (Xmin + 20) + (offset * BASE_OFFSET);
 		this->posY = Ymax - 10;
 
 		//Teste
-		this->movimento = 1.0f;
+		this->movimento = 0.0f;
+		this->resetCountMissil();
 	}
 	~Alien();
 	void movimenta(){
 		if (movimentoEPoissvel('X',this->posX,this->movimento))
 			this->posX = this->posX + this->movimento;
+		if (this->countAtiraMissil <= 0)
+			this->atiraMissil();
+
 	}
 	void desenha(){
 		glPushMatrix();
@@ -165,7 +201,42 @@ public:
 	}
 	void resetMovimento(){
 		//Teste
-		this->movimento = 0.0f;
+
+		int acao = rand() % 3;
+
+		// std::cout<< "Acao" << acao << "POS:" <<this->posX << "-" << this->posY << "\n"<<std::flush;
+		switch(acao){
+
+			case 0:
+				if(this->podeAtirar)
+					this->countAtiraMissil -= 1;
+				// acao = rand() % 3;
+				this->movimento = 0.0f;
+				break;
+			case 1:
+				this->movimento = 1.0f;
+				break;
+			case 2:
+				this->movimento = -1.0f;
+				break;
+			default:
+				this->movimento = 0.0f;
+				break;			
+		}
+	}
+	void atiraMissil(){
+
+		if (this->podeAtirar)
+		{
+			this->missil = new MissilAlien(this->posX,this->posY - 2,this);
+			this->podeAtirar = false;
+			this->resetCountMissil();
+		}
+
+	}
+
+	void resetCountMissil(){
+		this->countAtiraMissil = 20;
 	}
 };
 

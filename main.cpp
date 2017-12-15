@@ -3,14 +3,21 @@
 
 // #include <stdlib.h>
 // #include <iostream>
+#include <unistd.h>
+
 #include <GL/glut.h>
 #include "classeDesenho.h"
 #include "funcoes.h"
 
+
 GLfloat angle, fAspect;
 
 Nave *nave = new Nave();
-Desenho *alien =  new Alien();
+
+Desenho *aliens[NUM_ALIENS];
+
+const unsigned int sleepTime = 5000; //Micro segundos
+// Desenho *alien =  new Alien();
 
 
 void Controles(unsigned char tecla, int mouseX, int mouseY){
@@ -37,6 +44,7 @@ void UpdateFrame(Desenho *d){
 	if (d->getMissil() != NULL)
 	{
 		UpdateFrame(d->getMissil());
+		// d->getMissil()->testaColisao();
 	}
 
 }
@@ -58,7 +66,14 @@ void Desenha(void)
 
 
 	UpdateFrame(nave);
-	UpdateFrame(alien);
+	usleep(sleepTime);
+	for (int i = 0; i < NUM_ALIENS; ++i)
+	{
+		UpdateFrame(aliens[i]);
+		usleep(sleepTime);
+	}
+
+	// UpdateFrame(alien);
 	
 
 	glutSwapBuffers();
@@ -141,6 +156,12 @@ void AlteraTamanhoJanela(GLsizei w, GLsizei h)
 // Programa Principal
 int main(int argc, char** argv)
 {
+	for (int i = 0; i < NUM_ALIENS; ++i)
+	{	
+		aliens[i] = new Alien(i);
+	}
+
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(640,480);
