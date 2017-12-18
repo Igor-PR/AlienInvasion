@@ -67,13 +67,13 @@ void Desenha(void)
 
 
 	UpdateFrame(nave);
-	// usleep(sleepTime);
+	usleep(sleepTime);
 	for (int i = 0; i < NUM_ALIENS; ++i)
 	{
 		if (aliens[i] != NULL)
 		{
 			UpdateFrame(aliens[i]);
-			// usleep(sleepTime);
+			usleep(sleepTime);
 			fimJogo = false;
 		}
 		
