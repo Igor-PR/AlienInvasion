@@ -74,7 +74,7 @@ void Desenha(void)
 	}
 
 	// UpdateFrame(alien);
-	
+
 
 	glutSwapBuffers();
 	// glutPostRedisplay();
@@ -156,11 +156,18 @@ void AlteraTamanhoJanela(GLsizei w, GLsizei h)
 // Programa Principal
 int main(int argc, char** argv)
 {
+	Missil *missil = new Missil(nave->posX, nave->posY, pai);
+	int j = 0;
 	for (int i = 0; i < NUM_ALIENS; ++i)
-	{	
+	{
 		aliens[i] = new Alien(i);
 	}
-
+	while(j<NUM_ALIENS){
+		if(missil->posX == aliens[j]->posX && missil->posY == aliens[j]->posY){
+			aliens[j].delete;
+		}
+		j++;
+	}
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
