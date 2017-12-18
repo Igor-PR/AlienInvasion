@@ -43,3 +43,17 @@ bool movimentoEPoissvel(char plano,float posAtual, float movimento){
 	}
 
 }
+
+bool comparaColisao(float posX, float alvoX, float posY, float alvoY){
+
+	if ((posY >= alvoY - 5) && (posY <= alvoY + 5))
+	{
+		if ((posX >= alvoX - 5) && (posX <= alvoX + 5))
+		{
+			return true;
+		}
+	}
+	
+	return false;
+
+}

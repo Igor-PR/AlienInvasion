@@ -19,20 +19,28 @@ protected:
 public:
  	virtual void movimenta() = 0; 
  	virtual void desenha() = 0;
- 	// virtual void testaColisao();
  	virtual void resetMovimento() = 0;
+
+ 	virtual void testaColisao(Desenho **aliens, Desenho *nave) = 0;
 
  	Desenho* getMissil(){
  		return missil;
  	}
 
  	void deletaMissil(){
- 		// delete this->missil;
  		this->missil = NULL;
  	}
 
  	void resetAtirar(){
  		this->podeAtirar = true;
+ 	}
+
+ 	float getX(){
+ 		return this->posX;
+ 	}
+
+ 	float getY(){
+ 		return this->posY;
  	}
 };
 
@@ -43,8 +51,6 @@ public:
 	Missil(float X, float Y, Desenho *pai){
 		this->posX = X;
 		this->posY = Y;
-
-		//Teste
 		this->movimento = 1.0f;
 		this->pai = pai;
 	}
@@ -66,24 +72,37 @@ public:
 		glPopMatrix();	
 	}
 	void resetMovimento(){
-		//Teste
 		this->movimento = 1.0f;
 	}
+
+	void testaColisao(Desenho **aliens, Desenho *nave){}
 };
 
 class MissilJogador : public Missil{
 public:
 	MissilJogador(float X, float Y, Desenho *pai):Missil(X,Y,pai)
 	{}
+
+	void testaColisao(Desenho **aliens, Desenho *nave){
+		for (int j = 0; j < NUM_ALIENS; ++j)
+		{
+			if (aliens[j] != NULL)
+			{
+				if(comparaColisao(this->getX(),aliens[j]->getX(),this->getY(),aliens[j]->getY())){
+					// free(aliens[j]);
+					aliens[j] = NULL;
+				}
+			}
+			
+		}
+		
+	}
 };
 
 class MissilAlien : public Missil{
 public:
 	MissilAlien(float X, float Y, Desenho *pai):Missil(X,Y,pai){
-		// this->posX = X;
-		// this->posY = Y;
 		this->movimento = -1.0f;
-		// this->pai = pai;
 	}
 	void desenha(){
 		glPushMatrix();
@@ -96,6 +115,13 @@ public:
 	void resetMovimento(){
 		this->movimento = -1.0f;
 	}
+
+	void testaColisao(Desenho **aliens, Desenho *nave){
+
+		if(comparaColisao(this->getX(),nave->getX(),this->getY(),nave->getY())){
+			throw std::exception();
+		}
+	}
 };
 
 class Nave : public Desenho
@@ -104,8 +130,6 @@ public:
 	Nave(){
 		this->posX = 0.0f;
 		this->posY = Ymin + 10;
-
-		//Teste
 		this->movimento = -1.0f;
 	}
 	~Nave();
@@ -145,7 +169,6 @@ public:
 		glPopMatrix();	
 		}
 	void resetMovimento(){
-		//Teste
 		this->movimento = 0.0f;
 	}
 
@@ -162,6 +185,8 @@ public:
 		}
 
 	}
+
+	void testaColisao(Desenho **aliens, Desenho *nave){}
 };
 
 class Alien : public Desenho
@@ -172,8 +197,6 @@ public:
 	Alien(int offset){
 		this->posX = (Xmin + 20) + (offset * BASE_OFFSET);
 		this->posY = Ymax - 10;
-
-		//Teste
 		this->movimento = 0.0f;
 		this->resetCountMissil();
 	}
@@ -200,8 +223,6 @@ public:
 		glPopMatrix();	
 	}
 	void resetMovimento(){
-		//Teste
-
 		int acao = rand() % 3;
 
 		// std::cout<< "Acao" << acao << "POS:" <<this->posX << "-" << this->posY << "\n"<<std::flush;
@@ -238,6 +259,8 @@ public:
 	void resetCountMissil(){
 		this->countAtiraMissil = 20;
 	}
+
+	void testaColisao(Desenho **aliens, Desenho *nave){}
 };
 
 

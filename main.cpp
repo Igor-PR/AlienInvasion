@@ -43,8 +43,8 @@ void UpdateFrame(Desenho *d){
 	d->resetMovimento();
 	if (d->getMissil() != NULL)
 	{
+		d->getMissil()->testaColisao(aliens,nave);
 		UpdateFrame(d->getMissil());
-		// d->getMissil()->testaColisao();
 	}
 
 }
@@ -54,6 +54,7 @@ void UpdateFrame(Desenho *d){
 // Função callback chamada para fazer o desenho
 void Desenha(void)
 {
+	bool fimJogo = true;
 
 	// Especifica sistema de coordenadas do modelo
 	glMatrixMode(GL_MODELVIEW);
@@ -66,18 +67,23 @@ void Desenha(void)
 
 
 	UpdateFrame(nave);
-	usleep(sleepTime);
+	// usleep(sleepTime);
 	for (int i = 0; i < NUM_ALIENS; ++i)
 	{
-		UpdateFrame(aliens[i]);
-		usleep(sleepTime);
+		if (aliens[i] != NULL)
+		{
+			UpdateFrame(aliens[i]);
+			// usleep(sleepTime);
+			fimJogo = false;
+		}
+		
 	}
 
-	// UpdateFrame(alien);
+	if(fimJogo)
+		throw std::exception();
 	
 
 	glutSwapBuffers();
-	// glutPostRedisplay();
 }
 
 // Inicializa parâmetros de rendering
@@ -166,8 +172,13 @@ int main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(640,480);
 	glutCreateWindow("Alien Invasion");
-	glutDisplayFunc(Desenha);
-	glutIdleFunc(Desenha);
+	try{
+		glutDisplayFunc(Desenha);
+		glutIdleFunc(Desenha);
+	}
+	catch (std::exception& e){
+		return 0;
+	}
 
 	glutKeyboardFunc(Controles);
     glutReshapeFunc(AlteraTamanhoJanela);
