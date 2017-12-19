@@ -53,7 +53,7 @@ bool comparaColisao(float posX, float alvoX, float posY, float alvoY){
 			return true;
 		}
 	}
-	
+
 	return false;
 
 }

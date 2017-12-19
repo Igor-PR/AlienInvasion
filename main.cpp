@@ -76,12 +76,12 @@ void Desenha(void)
 			usleep(sleepTime);
 			fimJogo = false;
 		}
-		
+
 	}
 
 	if(fimJogo)
 		throw std::exception();
-	
+
 
 	glutSwapBuffers();
 }
@@ -163,11 +163,11 @@ void AlteraTamanhoJanela(GLsizei w, GLsizei h)
 int main(int argc, char** argv)
 {
 	for (int i = 0; i < NUM_ALIENS; ++i)
-	{	
+	{
 		aliens[i] = new Alien(i);
 	}
 
-
+	
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(640,480);
